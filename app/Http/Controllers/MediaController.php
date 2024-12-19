@@ -2,12 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\MediaResource;
 
 class MediaController extends Controller
 {
+
+    public function index()
+    {
+        $media = MediaResource::collection(Media::with("author")->paginate());
+
+        return Inertia::render('IndexMedia',[
+            'media' => $media
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('CreateMedia');
+    }
+
     public function store()
     {
         request()->validate([

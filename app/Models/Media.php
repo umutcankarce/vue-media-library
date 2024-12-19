@@ -48,4 +48,16 @@ class Media extends Model
 
        return $fileType['preview_url'] ?? asset('images/other-file.png');
     }
+
+    public function getUrlAttribute()
+
+    {
+
+        return url("media/{$this->created_at->format('Y/m/d')}/{$this->id}/{$this->file_name}");
+
+    }
+
+    public function author(){
+        return $this->belongsTo(User::class,'author_id');
+    }
 }

@@ -2,8 +2,6 @@
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import axios from 'axios';
     import { Head } from '@inertiajs/vue3';
-
-
     export default {
 
         components:{
@@ -54,12 +52,15 @@
 
                 this.media.filter(media => !media.uploaded).forEach(media => {
                     let form = new FormData;
+
                     form.append('file',media.file);
+                    // Post Request
                     axios.post(this.route('media.store'),form,{
                         onUploadProgress: (event) => {
                             media.progress = Math.round(event.loaded * 100 / event.total);
                         }
                     })
+                    // Response
                     .then(({data}) => {
                         media.uploaded    = true;
                         media.id          = data.id;

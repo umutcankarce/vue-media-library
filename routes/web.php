@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 
-Route::get('/media/create', function () {
-    return Inertia::render('CreateMedia');
-});
+Route::group(['middleware' => ['auth','verified']],function(){
+    Route::get('/media',[MediaController::class,'index'])->name('media.index');
+    Route::post('/media',[MediaController::class,'store'])->name('media.store');
+    Route::get('/media/create', [MediaController::class,'create'])->name('media.create');
 
-Route::post('/media',[MediaController::class,'store'])->name('media.store');
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -23,9 +27,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
