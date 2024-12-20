@@ -1,5 +1,5 @@
 <template>
-
+    <Head title="Media Library"/>
     <AuthenticatedLayout>
 
       <template #header>
@@ -8,9 +8,10 @@
 
           <h2 class="text-xl font-semibold leading-tight text-gray-800">Media Library</h2>
 
-          <inertia-link href="#" class="inline-flex items-center px-3 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-7 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <inertia-link href="#"
+           class="inline-flex items-center  cursor-pointer px-3 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-7 lg:text-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
 
-            Add new
+            New Media
 
           </inertia-link>
 
@@ -26,31 +27,24 @@
 
           <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-2">
 
-            <select aria-label="Media type" id="type" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-44 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <select v-model="query.fileType" aria-label="Media Type" id="type" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-44 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
 
-              <option selected>All media items</option>
+              <option v-for="type in allFileTypes" :key="type.id" :value="type.value">{{ type.label }}</option>
 
-              <option>Images</option>
-
-              <option>Videos</option>
 
             </select>
 
 
 
-            <select aria-label="Media date" id="date" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-44 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <select v-model="query.month" aria-label="Media Date" id="date" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-44 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
 
-              <option selected>All dates</option>
-
-              <option>June 2021</option>
-
-              <option>July 2021</option>
+              <option v-for="month in allMonths" :key="month.value" :value="month.value">{{ month.label }}</option>
 
             </select>
 
 
 
-            <button type="button" class="inline-flex items-center px-4 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-9 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <button @click="filter()" type="button" class="inline-flex items-center px-4 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-9 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
 
               Filter
 
@@ -78,9 +72,9 @@
 
             <select aria-label="Action" name="action" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-48 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
 
-              <option selected value="">Bulk actions</option>
+              <option selected value="">Bulk Actions</option>
 
-              <option value="delete">Delete permanently</option>
+              <option value="delete">Delete Permanently</option>
 
             </select>
 
@@ -302,7 +296,7 @@
 
                       <span class="text-xs text-gray-300">|</span>
 
-                      <a :href="item.url" class="text-xs text-blue-600 rounded hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <a :href="item.url" target="_blank" class="text-xs text-blue-600 rounded hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                         View
 
@@ -340,7 +334,7 @@
 
               <td colspan="4" class="p-2 text-sm text-gray-700">
 
-                No media files found.
+                Media Not Found.
 
               </td>
 
@@ -360,9 +354,9 @@
 
             <select aria-label="Action" name="action" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-48 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
 
-              <option selected value="">Bulk actions</option>
+              <option selected value="">Bulk Actions</option>
 
-              <option value="delete">Delete permanently</option>
+              <option value="delete">Delete Permanently</option>
 
             </select>
 
@@ -489,23 +483,58 @@
   <script>
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
+import pickBy from "lodash/pickBy";
 
-
-
-  export default {
+export default {
 
     components: {
-
         AuthenticatedLayout,
-
+        Head,
+        pickBy
     },
 
     props: {
-
-      media: Object,
-
+        media : Object,
+        fileTypes : Array,
+        months : Array,
+        queryParams : Object
     },
 
-  };
+    data(){
+        return {
+            query : {
+                fileType: this.queryParams.fileType,
+                month: this.queryParams.month,
+            },
+        }
+    },
 
-  </script>
+    methods: {
+        filter()
+        {
+            this.$inertia.get(route('media.index'),pickBy(this.query));
+        }
+    },
+
+    computed: {
+        allFileTypes()
+        {
+            return [
+                {value:null,label:'Filter File Types'},
+                ...this.fileTypes
+            ];
+        },
+
+        allMonths()
+        {
+            return [
+                {value:null,label:'Filter Date'},
+                ...this.months
+            ];
+        }
+    }
+
+};
+
+</script>
