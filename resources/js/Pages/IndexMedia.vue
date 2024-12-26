@@ -28,28 +28,15 @@
           <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-2">
 
             <select v-model="query.fileType" aria-label="Media Type" id="type" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-44 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-
               <option v-for="type in allFileTypes" :key="type.id" :value="type.value">{{ type.label }}</option>
-
-
             </select>
-
-
 
             <select v-model="query.month" aria-label="Media Date" id="date" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-44 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-
               <option v-for="month in allMonths" :key="month.value" :value="month.value">{{ month.label }}</option>
-
             </select>
-
-
-
             <button @click="filter()" type="button" class="inline-flex items-center px-4 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-9 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-
               Filter
-
             </button>
-
           </div>
 
 
@@ -58,7 +45,7 @@
 
             <label for="search" class="text-sm font-medium text-gray-700 sr-only">Search</label>
 
-            <input type="search" id="search" class="w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm lg:w-64 focus:ring-blue-500 focus:border-blue-500" placeholder="Search for..."/>
+            <input type="search" id="search" class="w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm lg:w-64 focus:ring-blue-500 focus:border-blue-500" placeholder="Search"/>
 
           </div>
 
@@ -71,19 +58,12 @@
           <div class="hidden space-x-2 lg:flex">
 
             <select aria-label="Action" name="action" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-48 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-
               <option selected value="">Bulk Actions</option>
-
               <option value="delete">Delete Permanently</option>
-
             </select>
 
-
-
             <button type="button" class="inline-flex items-center px-4 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-9 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-
               Apply
-
             </button>
 
           </div>
@@ -93,8 +73,6 @@
           <div class="inline-flex justify-center items-center">
 
             <div class="hidden mr-2 text-sm text-gray-600 lg:block">10 items</div>
-
-
 
             <div class="flex space-x-1 items-top">
 

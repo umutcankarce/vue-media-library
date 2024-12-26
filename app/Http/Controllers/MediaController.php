@@ -2,26 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MediaResource;
-
 class MediaController extends Controller
 {
 
     public function index()
     {
 
-
         $media = MediaResource::collection(
             Media::with('author')
                     ->type(request('fileType'))
-                    ->month(request('month'))
-            );
+                    ->month(request('month'))->get()
+                );
 
         $fileTypes = Media::selectRaw("distinct mime_type")
             ->get()
@@ -35,8 +32,6 @@ class MediaController extends Controller
             $months = DB::table('media')
             ->selectRaw('distinct DATE_FORMAT(created_at,"%m-%Y") as value,DATE_FORMAT(created_at,"%M %Y") as label')
             ->orderByDesc('value')->get();
-
-
 
         return Inertia::render('IndexMedia',[
             'media'       => $media,
@@ -62,10 +57,10 @@ class MediaController extends Controller
         $file = request()->file('file');
 
         $media = Media::create([
-            'name' => $file->getClientOriginalName(),
+            'name'      => $file->getClientOriginalName(),
             'file_name' => $file->getClientOriginalName(),
             'mime_type' => $file->getMimeType(),
-            'size' => $file->getSize(),
+            'size'      => $file->getSize(),
             'author_id' => Auth::user()->id
         ]);
 

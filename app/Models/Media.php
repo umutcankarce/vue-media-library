@@ -16,65 +16,39 @@ class Media extends Model
     protected static $types = [
 
         'image' => [
-
             'image/gif',
-
             'image/avif',
-
             'image/apng',
-
             'image/png',
-
             'image/svg+xml',
-
             'image/webp',
-
             'image/jpeg'
-
         ],
 
         'audio' => [
-
             'audio/mpeg',
-
             'audio/aac',
-
             'audio/wav',
-
         ],
 
         'video' => [
-
             'video/mp4',
-
             'video/webm',
-
             'video/mpeg',
-
             'video/x-msvideo',
-
         ],
 
         'document' => [
-
             'application/msword',
-
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-
             'application/pdf'
-
         ],
 
         'archive' => [
-
             'application/zip',
-
             'application/x-7z-compressed',
-
             'application/gzip',
-
             'application/vnd.rar',
-
         ],
 
     ];
@@ -91,6 +65,7 @@ class Media extends Model
             'audio'    =>  asset('images/audio-file.png'),
             'video'    =>  asset('images/video-file.png'),
             'document' =>  asset('images/doc-file.png'),
+            'archive'  =>  asset('images/archive-file.png'),
             'other'    =>  asset('images/other-file.png'),
         ]);
 
