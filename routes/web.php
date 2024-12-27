@@ -12,6 +12,7 @@ Route::group(['middleware' => ['auth','verified']],function(){
     Route::get('/media',[MediaController::class,'index'])->name('media.index');
     Route::post('/media',[MediaController::class,'store'])->name('media.store');
     Route::get('/media/create', [MediaController::class,'create'])->name('media.create');
+    Route::delete('/media/destroy', [MediaController::class,'destroy'])->name('media.destroy');
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');

@@ -45,7 +45,7 @@
 
             <label for="search" class="text-sm font-medium text-gray-700 sr-only">Search</label>
 
-            <input type="search" id="search" class="w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm lg:w-64 focus:ring-blue-500 focus:border-blue-500" placeholder="Search"/>
+            <input v-model="query.term" @keydown.enter="filter()" type="search" id="search" class="w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm lg:w-64 focus:ring-blue-500 focus:border-blue-500" placeholder="Search"/>
 
           </div>
 
@@ -55,116 +55,104 @@
 
         <section class="flex flex-col mb-4 lg:flex-row lg:justify-between">
 
-          <div class="hidden space-x-2 lg:flex">
-
-            <select aria-label="Action" name="action" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-48 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-              <option selected value="">Bulk Actions</option>
-              <option value="delete">Delete Permanently</option>
-            </select>
-
-            <button type="button" class="inline-flex items-center px-4 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-9 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              Apply
-            </button>
-
-          </div>
-
+            <SelectAction :actions="actions" @execute="executeAction"></SelectAction>
 
 
           <div class="inline-flex justify-center items-center">
 
-            <div class="hidden mr-2 text-sm text-gray-600 lg:block">10 items</div>
+            <div class="hidden mr-2 text-sm text-gray-600 lg:block">12 items</div>
 
             <div class="flex space-x-1 items-top">
 
-              <inertia-link
+            <inertia-link
 
-                  href="#"
+                href="#"
 
-                  as="span"
+                as="span"
 
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 lg:text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
-
-                     stroke="currentColor">
-
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
-
-                </svg>
-
-              </inertia-link>
-
-              <inertia-link
-
-                  href="#"
-
-                  as="span"
-
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 lg:text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
 
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
 
-                     stroke="currentColor">
+                    stroke="currentColor">
 
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
 
                 </svg>
 
-              </inertia-link>
+            </inertia-link>
+
+            <inertia-link
+
+                href="#"
+
+                as="span"
+
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
+
+                    stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+
+                </svg>
+
+            </inertia-link>
 
 
 
-              <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:items-center md:space-x-1">
+            <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:items-center md:space-x-1">
 
                 <input type="text" value="1" class="px-2 w-11 h-11 text-center rounded border border-gray-400 shadow-sm lg:h-9 lg:w-9 lg:text-sm focus:ring-blue-500 focus:border-blue-500"/>
 
-                <div class="px-2 text-gray-600 lg:text-sm">of 2</div>
-
-              </div>
-
-
-
-              <inertia-link
-
-                  href="#"
-
-                  as="span"
-
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
-
-                     stroke="currentColor">
-
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-
-                </svg>
-
-              </inertia-link>
-
-
-
-              <inertia-link
-
-                  href="#"
-
-                  as="span"
-
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
-
-                     stroke="currentColor">
-
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
-
-                </svg>
-
-              </inertia-link>
+                <div class="px-2 text-gray-600 lg:text-sm">of 2 {{  }}</div>
 
             </div>
 
-          </div>
+
+
+            <inertia-link
+
+                href="#"
+
+                as="span"
+
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
+
+                    stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </inertia-link>
+
+
+
+            <inertia-link
+
+                href="#"
+
+                as="span"
+
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
+
+                    stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+
+                </svg>
+
+            </inertia-link>
+
+            </div>
+
+            </div>
 
         </section>
 
@@ -180,7 +168,7 @@
 
               <th class="px-2 w-10 text-center">
 
-                <input type="checkbox" class="w-6 h-6 text-blue-600 rounded border-gray-300 lg:w-4 lg:h-4 focus:ring-blue-500">
+                <input type="checkbox" @change="toggleSelectAll" class="w-6 h-6 text-blue-600 rounded border-gray-300 lg:w-4 lg:h-4 focus:ring-blue-500">
 
               </th>
 
@@ -230,7 +218,7 @@
 
               <td class="p-2 w-10 text-center">
 
-                <input type="checkbox" class="w-6 h-6 text-blue-600 rounded border-gray-300 lg:w-4 lg:h-4 focus:ring-blue-500">
+                <input type="checkbox" v-model="item.selected" class="w-6 h-6 text-blue-600 rounded border-gray-300 lg:w-4 lg:h-4 focus:ring-blue-500">
 
               </td>
 
@@ -266,7 +254,7 @@
 
                       <span class="text-xs text-gray-300">|</span>
 
-                      <button class="text-xs text-red-600 rounded hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <button @click="deleteMedia(item.id)" class="text-xs text-red-600 rounded hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                         Delete
 
@@ -328,125 +316,103 @@
 
         <section class="flex flex-col mb-4 lg:flex-row lg:justify-between">
 
-          <div class="hidden space-x-2 lg:flex">
-
-            <select aria-label="Action" name="action" class="pr-10 pl-3 w-full h-11 rounded border-gray-300 shadow-sm lg:h-9 lg:text-sm sm:w-48 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-
-              <option selected value="">Bulk Actions</option>
-
-              <option value="delete">Delete Permanently</option>
-
-            </select>
-
-
-
-            <button type="button" class="inline-flex items-center px-4 h-11 font-medium text-gray-700 bg-white rounded border border-gray-300 shadow-sm lg:h-9 lg:text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-
-              Apply
-
-            </button>
-
-          </div>
-
-
+            <SelectAction :actions="actions" @execute="executeAction"></SelectAction>
 
           <div class="inline-flex justify-center items-center">
 
-            <div class="hidden mr-2 text-sm text-gray-600 lg:block">10 items</div>
-
-
+            <div class="hidden mr-2 text-sm text-gray-600 lg:block">12 items</div>
 
             <div class="flex space-x-1 items-top">
 
-              <inertia-link
+            <inertia-link
 
-                  href="#"
+                href="#"
 
-                  as="span"
+                as="span"
 
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 lg:text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
-
-                     stroke="currentColor">
-
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
-
-                </svg>
-
-              </inertia-link>
-
-              <inertia-link
-
-                  href="#"
-
-                  as="span"
-
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 lg:text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
 
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
 
-                     stroke="currentColor">
+                    stroke="currentColor">
 
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
 
                 </svg>
 
-              </inertia-link>
+            </inertia-link>
+
+            <inertia-link
+
+                href="#"
+
+                as="span"
+
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-200 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
+
+                    stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+
+                </svg>
+
+            </inertia-link>
 
 
 
-              <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:items-center md:space-x-1">
+            <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:items-center md:space-x-1">
 
                 <input type="text" value="1" class="px-2 w-11 h-11 text-center rounded border border-gray-400 shadow-sm lg:h-9 lg:w-9 lg:text-sm focus:ring-blue-500 focus:border-blue-500"/>
 
-                <div class="px-2 text-gray-600 lg:text-sm">of 2</div>
-
-              </div>
-
-
-
-              <inertia-link
-
-                  href="#"
-
-                  as="span"
-
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
-
-                     stroke="currentColor">
-
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-
-                </svg>
-
-              </inertia-link>
-
-
-
-              <inertia-link
-
-                  href="#"
-
-                  as="span"
-
-                  class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
-
-                     stroke="currentColor">
-
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
-
-                </svg>
-
-              </inertia-link>
+                <div class="px-2 text-gray-600 lg:text-sm">of 2 {{  }}</div>
 
             </div>
 
-          </div>
+
+
+            <inertia-link
+
+                href="#"
+
+                as="span"
+
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
+
+                    stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </inertia-link>
+
+
+
+            <inertia-link
+
+                href="#"
+
+                as="span"
+
+                class="inline-flex justify-center items-center w-11 h-11 text-gray-700 bg-white rounded border border-gray-300 shadow-sm outline-none hover:bg-gray-50 lg:h-9 lg:w-9 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 lg:h-3 lg:w-3" fill="none" viewBox="0 0 24 24"
+
+                    stroke="currentColor">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+
+                </svg>
+
+            </inertia-link>
+
+            </div>
+
+            </div>
 
         </section>
 
@@ -463,13 +429,15 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import pickBy from "lodash/pickBy";
+import SelectAction from '@/Components/SelectAction.vue';
 
 export default {
 
     components: {
         AuthenticatedLayout,
         Head,
-        pickBy
+        pickBy,
+        SelectAction
     },
 
     props: {
@@ -481,17 +449,58 @@ export default {
 
     data(){
         return {
+            actions:[
+                {id:null,label:'Bulk Actions'},
+                {id:"delete",label:'Delete'},
+            ],
             query : {
-                fileType: this.queryParams.fileType,
-                month: this.queryParams.month,
+                term : this.queryParams.term,
+                fileType : this.queryParams.fileType,
+                month : this.queryParams.month,
             },
         }
     },
 
     methods: {
+
+        deleteMedia(mediaId){
+            if(confirm('Are you sure delete?')){
+                this.$inertia.delete(route('media.destroy'),{
+                    preserveState:false,
+                    data:{
+                        mediaIds:[mediaId]
+                    }
+                })
+            }
+        },
+
+        toggleSelectAll(e){
+            this.media.data.forEach(media => media.selected = e.target.checked);
+        },
+
+        executeAction(actionId){
+            const mediaIds = this.media.data.filter(media => media.selected).map(media => media.id);
+            if(!mediaIds.length) return;
+
+            switch(actionId){
+                case 'delete':
+                    if(confirm('Are you sure delete?')){
+                        this.$inertia.delete(route('media.destroy'),{
+                            preserveState:false,
+                            data:{
+                                mediaIds:mediaIds
+                            }
+                        })
+                    }
+                break;
+            }
+        },
+
         filter()
         {
-            this.$inertia.get(route('media.index'),pickBy(this.query));
+            this.$inertia.get(route('media.index'),pickBy(this.query),{
+                preserveState:true
+            });
         }
     },
 

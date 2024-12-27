@@ -85,8 +85,14 @@ class Media extends Model
 
     public function getUrlAttribute()
     {
-        return url("storage/media/{$this->created_at->format('Y/m/d')}/{$this->id}/{$this->file_name}");
+        return url($this->path);
     }
+
+    public function getPathAttribute()
+    {
+        return "storage/media/{$this->created_at->format('Y/m/d')}/{$this->id}/{$this->file_name}";
+    }
+
 
     public static function getMimes($fileType)
     {
@@ -101,13 +107,21 @@ class Media extends Model
         return $builder;
     }
 
-    public function scopeMonth(Builder $builder,$month)
+    public function scopeMonth(Builder $builder,$date)
     {
-        if(!is_null($month)){
+        if(!is_null($date)){
              $builder->whereBetween('created_at',[
-                Carbon::createFromFormat('m-Y',$month)->startOfMonth(),
-                Carbon::createFromFormat('m-Y',$month)->endOfMonth()
+                Carbon::createFromFormat('d-m-Y',$date)->startOfMonth(),
+                Carbon::createFromFormat('d-m-Y',$date)->endOfMonth()
             ]);
+        }
+        return $builder;
+    }
+
+    public function scopeSearch(Builder $builder,$term)
+    {
+        if(!is_null($term)){
+             $builder->where('name','LIKE','%'.$term.'%');
         }
         return $builder;
     }

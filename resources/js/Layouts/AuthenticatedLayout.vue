@@ -40,6 +40,16 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                             </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('media.index')"
+                                    :active="route().current('media.index')"
+                                >
+                                    Media
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
@@ -81,7 +91,7 @@ const showingNavigationDropdown = ref(false);
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            Logout
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -132,6 +142,52 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <!-- Responsive Navigation Menu -->
+                <div
+                    :class="{
+                        block: showingNavigationDropdown,
+                        hidden: !showingNavigationDropdown,
+                    }"
+                    class="sm:hidden"
+                >
+                    <div class="space-y-1 pb-3 pt-2">
+                        <ResponsiveNavLink
+                            :href="route('dashboard')"
+                            :active="route().current('dashboard')"
+                        >
+                            Dashboard
+                        </ResponsiveNavLink>
+                    </div>
+
+                    <!-- Responsive Settings Options -->
+                    <div
+                        class="border-t border-gray-200 pb-1 pt-4"
+                    >
+                        <div class="px-4">
+                            <div
+                                class="text-base font-medium text-gray-800"
+                            >
+                                {{ $page.props.auth.user.name }}
+                            </div>
+                            <div class="text-sm font-medium text-gray-500">
+                                {{ $page.props.auth.user.email }}
+                            </div>
+                        </div>
+
+                        <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink :href="route('profile.edit')">
+                                Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
+                            >
+                                Logout
+                            </ResponsiveNavLink>
+                        </div>
+                    </div>
+                </div>
+
                 <div
                     :class="{
                         block: showingNavigationDropdown,

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MediaResource;
+use Illuminate\Support\Facades\Storage;
+
 class MediaController extends Controller
 {
 
@@ -17,6 +19,7 @@ class MediaController extends Controller
         $media = MediaResource::collection(
             Media::with('author')
                     ->type(request('fileType'))
+                    ->search(request('term'))
                     ->month(request('month'))->get()
                 );
 
@@ -30,14 +33,14 @@ class MediaController extends Controller
             })->unique('value')->values();
 
             $months = DB::table('media')
-            ->selectRaw('distinct DATE_FORMAT(created_at,"%m-%Y") as value,DATE_FORMAT(created_at,"%M %Y") as label')
+            ->selectRaw('distinct DATE_FORMAT(created_at,"01-%m-%Y") as value,DATE_FORMAT(created_at,"%M %Y") as label')
             ->orderByDesc('value')->get();
 
         return Inertia::render('IndexMedia',[
             'media'       => $media,
             'fileTypes'   => $fileTypes,
             'months'      => $months,
-            'queryParams' => request()->all(['fileType','month']),
+            'queryParams' => request()->all(['fileType','month','term']),
         ]);
     }
 
@@ -71,5 +74,21 @@ class MediaController extends Controller
             'id' => $media->id,
             'preview_url' => $media->preview_url,
         ];
+    }
+
+    public function destroy()
+    {
+        request()->validate([
+            'mediaIds' => ["required","array"]
+        ]);
+
+        foreach(Media::find(request('mediaIds')) as $media) {
+            $media->delete();
+
+            Storage::disk('public')->delete($media->path);
+        }
+
+        return redirect()->back();
+
     }
 }
